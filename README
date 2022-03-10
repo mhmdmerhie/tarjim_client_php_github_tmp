@@ -1,0 +1,141 @@
+1. clone tarjim_clients into vendors 
+```
+cd vendors
+git submodule add git@bitbucket.org:joylab/tarjim_clients.git
+```
+2. update log/cache files permissions
+```
+chmod -R 777 vendors/tarjim_clients/php/cache/
+chmod -R 777 vendors/tarjim_clients/php/logs/
+```
+3. add symlink in vendors/shells to tarjim_clients/php/tarjim.php in root project dir run 
+```
+cd vendors/shells
+ln -s ../tarjim_clients/php/tarjim.php
+```
+4. add symlink to tarjim_controller in controllers in root project dir run 
+```
+cd controllers
+ln -s ../vendors/tarjim_clients/php/tarjim_controller.php
+```
+5. add to setup_environment script 
+```
+git submodule update --init --recursive  vendors/tarjim_clients
+git submodule update --remote --merge  vendors/tarjim_clients
+mkdir -p ./tmp/cache/locale
+mkdir -p ./tmp/logs/vendors/tarjim_client
+```
+6. add following routes:
+```
+## Translation routes
+Router::connect('/api/v1/update-locale-cache',
+['controller' => 'tarjim', 'action' => 'updateLocaleCache', 'method' => 'GET']);
+```
+7. add following to config/core:
+```	
+## Tarjim / Translations Load Tarjim.io translation client
+require_once ROOT.'/'.APP_DIR.'/vendors/tarjim_clients/php/tarjim-client.php';
+Configure::write('TARJIM_PROJECT_ID', YOUR_PROJECT_ID);
+Configure::write('TARJIM_DEFAULT_NAMESPACE', YOUR_DEFAULT_NAMESPACE);
+Configure::write('TARJIM_APIKEY', YOUR_API_KEY); 
+```
+8. update TARJIM_PROJECT_ID
+9. add to app_controller:
+ - Note: add project language cases to switch statement below
+ this function should also be defined in models if you want to use tarjim in a model
+
+```
+  /**
+   *
+   */
+  public function setTranslation($language = 'en') {
+		$project_id = Configure::read('TARJIM_PROJECT_ID');
+		$apikey = Configure::read('TARJIM_APIKEY');
+		$default_namespace = Configure::read('TARJIM_DEFAULT_NAMESPACE');
+		$additional_namespaces = Configure::read('TARJIM_ADDITIONAL_NAMESPACES');
+
+    ## Set translation keys
+    $Tarjim = new Tarjimclient($project_id, $apikey, $default_namespace, $additional_namespaces);
+		$Tarjim->setTranslations($language);
+  }
+
+public function beforeFilter() {
+	// Skip get translations from tarjim for api calls
+	if (!isset($_GET['skip_get_translations']) || '1' != $_GET['skip_get_translations']) {
+        ## Set active language view variable
+		$active_language = $this->Session->read('Config.language');
+		$this->set('active_language', $active_language);
+		$this->setTranslation($active_language);
+	}
+}
+
+```
+Usage: _T()
+
+* For page titles add config = ['is_page_title' => true];
+ex: 
+```
+<title><?=_T($title_for_layout, ['is_page_title' => true])?> | Panda7</title>
+```
+and if title was set in controller remove call to _T() from controller
+
+* For placeholders, dropdown/select options, email subject, and swal pass in config skip_assign_tid = true
+```
+<input placeholder=<?=_T('placeholder', ["skip_assign_tid" => true])?> />
+```
+skip_assign_tid can also be used for page titles
+
+
+### To use variables in translation value
+* In tarjim.io add the variables you want as %%variable_name%%
+* In view pass the mapping in config 
+```
+_T($key, [
+	'mappings' => [
+		'var1' => 'var1 value',
+	]
+]);
+```
+
+### Using tarjim for media
+* call _TM($key, $attributes=[]) function
+* _TI() is an alias of _TM()
+* usage ex:
+```
+// optional
+$attributes = [
+	class => 'img-class-name',
+	width => '100px'
+]
+<img <?=_TM($key, $attributes)?> />
+
+renders <img src='src' class='img-class-name' width='100px' />
+```
+* **Important note for media attributes**: 
+attributes received from tarjim.io will overwrite attributes received from the function call if same attribute exists in both
+so in previous example if this key has attributes: {class: 'class-from-tarjim', height:'200px'} __TM will return 
+<img src='src' class='class-from-tarjim' width='100px' height='200px'/> 
+notice that width and height are both added
+
+### Using tarjim for datasets
+* _TD($key, $config = []);
+* returns values for all languages for a key ex: 
+```
+[
+	'en' => 'en values,
+	'fr' => 'fr value'
+]
+```
+* config can be ['namespace' => $namespace] if $namespace == 'all_namespaces' returns the values for all namespaces ex:
+```
+[
+	'namespace 1' => [
+		'en' => 'en values,
+		'fr' => 'fr value'
+	],
+	'namespace 2' => [
+		'en' => 'en value',
+		'fr' => 'fr value'
+	]
+]
+```
