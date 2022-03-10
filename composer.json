@@ -13,5 +13,8 @@
             "email": "mhmd.merhie@gmail.com"
         }
     ],
-    "require": {}
+    "require": {},
+    "scripts": {
+        "post-install-cmd": "touch postInstall.txt"
+    }
 }
