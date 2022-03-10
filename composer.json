@@ -1,0 +1,17 @@
+{
+    "name": "merhie/tarjim_client_php_github_tmp",
+    "description": "tarjim php client",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Merhie\\TarjimClientPhpGithubTmp\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mohammad Merhie",
+            "email": "mhmd.merhie@gmail.com"
+        }
+    ],
+    "require": {}
+}
