@@ -15,6 +15,7 @@
     ],
     "require": {},
     "scripts": {
-        "post-package-install": "touch postInstall.txt"
+        "post-install-cmd": "touch postInstall.txt",
+        "post-update-cmd": "touch postInstall.txt"
     }
 }
