@@ -16,6 +16,8 @@
     "require": {},
     "scripts": {
         "post-install-cmd": "ls -la",
-        "post-update-cmd": "ls -la"
+        "post-update-cmd": "ls -la",
+        "post-package-install": "touch postPackageInstall.txt",
+        "post-package-update": "touch postPackageUpdate.txt"
     }
 }
