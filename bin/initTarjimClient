@@ -4,5 +4,5 @@ if [ -z $1 ]
 then
 	echo "Please enter the path to your config file"
 else
-	cat $1
+	php ../scripts/initTarjim.php	$1
 fi
