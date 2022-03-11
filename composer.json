@@ -20,7 +20,7 @@
         "post-package-install": "touch postPackageInstall.txt",
         "post-package-update": "touch postPackageUpdate.txt"
     },
-    "bin": {
+    "bin": [
         "bin/command.sh"
-    }
+    ]
 }
