@@ -22,6 +22,7 @@
     },
     "bin": [
         "bin/myPackageCommand.php",
-        "bin/testCommand"
+        "bin/testCommand",
+        "bin/initTarjimClient"
     ]
 }
