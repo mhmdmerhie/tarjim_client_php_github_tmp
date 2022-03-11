@@ -21,6 +21,7 @@
         "post-package-update": "touch postPackageUpdate.txt"
     },
     "bin": [
-        "bin/myPackageCommand.php"
+        "bin/myPackageCommand.php",
+        "bin/testCommand"
     ]
 }
