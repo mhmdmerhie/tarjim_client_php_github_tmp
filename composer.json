@@ -21,8 +21,6 @@
         "post-package-update": "touch postPackageUpdate.txt"
     },
     "bin": [
-        "bin/myPackageCommand.php",
-        "bin/testCommand",
-        "bin/initTarjimClient"
+        "bin/"
     ]
 }
