@@ -13,14 +13,5 @@
             "email": "mhmd.merhie@gmail.com"
         }
     ],
-    "require": {},
-    "scripts": {
-        "post-install-cmd": "ls -la",
-        "post-update-cmd": "ls -la",
-        "post-package-install": "touch testFILE.txt",
-        "post-package-update": "touch postPackageUpdate.txt"
-    },
-    "bin": [
-        "bin/initTarjimClient"
-    ]
+    "require": {}
 }

@@ -6,7 +6,7 @@ use Merhie\TarjimClientPhpGithubTmp\TarjimClient;
  * Tarjim error handler
  */
 function tarjimErrorHandler($errno, $errstr, $errfile, $errline) {
-  $Tarjim = new TarjimClient();
+  $Tarjim = new TarjimClient($_T['meta']['config_file_path']);
   $Tarjim->writeToFile($Tarjim->errors_file, date('Y-m-d H:i:s').' Tarjim client error file '.$errfile.' (line '.$errline.'): '.$errstr.PHP_EOL, FILE_APPEND);
 }
 
@@ -279,7 +279,7 @@ function sanitizeResult($key, $result) {
   ];
 
   if ($result != strip_tags($result)) {
-    $Tarjim = new TarjimClient;
+    $Tarjim = new TarjimClient($_T['meta']['config_file_path']);
     ## Get meta from cache
     $cache_data = file_get_contents($Tarjim->cache_file);
     $cache_data = json_decode($cache_data, true);
@@ -360,7 +360,7 @@ function sanitizeResult($key, $result) {
  */
 function cacheSanitizedHTML($key, $sanitized, $cache_results_checksum) {
   global $_T;
-  $Tarjim = new TarjimClient;
+  $Tarjim = new TarjimClient($_T['meta']['config_file_path']);
   $sanitized_html_cache_file = $Tarjim->sanitized_html_cache_file;
 
   ## Get active language
